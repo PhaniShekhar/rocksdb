@@ -1279,7 +1279,6 @@ uint32_t LevelCompactionBuilder::GetPathId(
   uint64_t level_size;
   int cur_level = 0;
 
-  // L0 size is estimated as the same value as L1 size.
   level_size = mutable_cf_options.max_bytes_for_level_base;
 
   // Last path is the fallback
@@ -1291,6 +1290,7 @@ uint32_t LevelCompactionBuilder::GetPathId(
       } else {
         current_path_size -= level_size;
         if (cur_level == 0) {
+          // L0 size is estimated as the same value as L1 size.
           level_size = mutable_cf_options.max_bytes_for_level_base;
         }
         else {
