@@ -104,7 +104,7 @@ class Repairer {
         default_cf_opts_(
             SanitizeOptions(immutable_db_options_, default_cf_opts)),
         default_cf_iopts_(
-            ImmutableCFOptions(immutable_db_options_, default_cf_opts)),
+            ImmutableCFOptions(immutable_db_options_, default_cf_opts_)),
         unknown_cf_opts_(
             SanitizeOptions(immutable_db_options_, unknown_cf_opts)),
         create_unknown_cfs_(create_unknown_cfs),
