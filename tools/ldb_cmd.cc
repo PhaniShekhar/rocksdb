@@ -1883,6 +1883,12 @@ class InMemoryHandler : public WriteBatch::Handler {
     return Status::OK();
   }
 
+  virtual Status MarkNoop(bool)
+                          override {
+    row_ << "NOOP ";
+    return Status::OK();
+  }
+
   virtual Status DeleteCF(uint32_t cf, const Slice& key) override {
     row_ << "DELETE(" << cf << ") : ";
     row_ << LDBCommand::StringToHex(key.ToString()) << " ";
@@ -2610,10 +2616,7 @@ CheckPointCommand::CheckPointCommand(
     : LDBCommand(options, flags, false /* is_read_only */,
                  BuildCmdLineOptions({ARG_CHECKPOINT_DIR})) {
   auto itr = options.find(ARG_CHECKPOINT_DIR);
-  if (itr == options.end()) {
-    exec_state_ = LDBCommandExecuteResult::Failed(
-        "--" + ARG_CHECKPOINT_DIR + ": missing checkpoint directory");
-  } else {
+  if (itr != options.end()) {
     checkpoint_dir_ = itr->second;
   }
 }

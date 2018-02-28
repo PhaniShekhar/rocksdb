@@ -1,6 +1,52 @@
 # Rocksdb Change Log
 ## Unreleased
 ### Public API Change
+* RocksDBOptionsParser::Parse()'s `ignore_unknown_options` argument will only be effective if the option file shows it is generated using a higher version of RocksDB than the current version.
+
+### New Features
+* Avoid unnecessarily flushing in `CompactRange()` when the range specified by the user does not overlap unflushed memtables.
+
+## 5.12.0 (2/14/2018)
+### Public API Change
+* Iterator::SeekForPrev is now a pure virtual method. This is to prevent user who implement the Iterator interface fail to implement SeekForPrev by mistake.
+* Add `include_end` option to make the range end exclusive when `include_end == false` in `DeleteFilesInRange()`.
+* Add `CompactRangeOptions::allow_write_stall`, which makes `CompactRange` start working immediately, even if it causes user writes to stall. The default value is false, meaning we add delay to `CompactRange` calls until stalling can be avoided when possible. Note this delay is not present in previous RocksDB versions.
+* Creating checkpoint with empty directory now returns `Status::InvalidArgument`; previously, it returned `Status::IOError`.
+* Adds a BlockBasedTableOption to turn off index block compression.
+* Close() method now returns a status when closing a db.
+
+### New Features
+* Improve the performance of iterators doing long range scans by using readahead.
+* Add new function `DeleteFilesInRanges()` to delete files in multiple ranges at once for better performance.
+* FreeBSD build support for RocksDB and RocksJava.
+* Improved performance of long range scans with readahead.
+* Updated to and now continuously tested in Visual Studio 2017.
+
+### Bug Fixes
+* Fix `DisableFileDeletions()` followed by `GetSortedWalFiles()` to not return obsolete WAL files that `PurgeObsoleteFiles()` is going to delete.
+* Fix Handle error return from WriteBuffer() during WAL file close and DB close.
+* Fix advance reservation of arena block addresses.
+* Fix handling of empty string as checkpoint directory.
+
+## 5.11.0 (01/08/2018)
+### Public API Change
+* Add `autoTune` and `getBytesPerSecond()` to RocksJava RateLimiter
+
+### New Features
+* Add a new histogram stat called rocksdb.db.flush.micros for memtable flush.
+* Add "--use_txn" option to use transactional API in db_stress.
+* Disable onboard cache for compaction output in Windows platform.
+* Improve the performance of iterators doing long range scans by using readahead.
+
+### Bug Fixes
+* Fix a stack-use-after-scope bug in ForwardIterator.
+* Fix builds on platforms including Linux, Windows, and PowerPC.
+* Fix buffer overrun in backup engine for DBs with huge number of files.
+* Fix a mislabel bug for bottom-pri compaction threads.
+* Fix DB::Flush() keep waiting after flush finish under certain condition.
+
+## 5.10.0 (12/11/2017)
+### Public API Change
 * When running `make` with environment variable `USE_SSE` set and `PORTABLE` unset, will use all machine features available locally. Previously this combination only compiled SSE-related features.
 
 ### New Features
@@ -25,6 +71,7 @@
 * Return an error on write if write_options.sync = true and write_options.disableWAL = true to warn user of inconsistent options. Previously we will not write to WAL and not respecting the sync options in this case.
 
 ### New Features
+* CRC32C is now using the 3-way pipelined SSE algorithm `crc32c_3way` on supported platforms to improve performance. The system will choose to use this algorithm on supported platforms automatically whenever possible. If PCLMULQDQ is not supported it will fall back to the old Fast_CRC32 algorithm.
 * `DBOptions::writable_file_max_buffer_size` can now be changed dynamically.
 * `DBOptions::bytes_per_sync`, `DBOptions::compaction_readahead_size`, and `DBOptions::wal_bytes_per_sync` can now be changed dynamically, `DBOptions::wal_bytes_per_sync` will flush all memtables and switch to a new WAL file.
 * Support dynamic adjustment of rate limit according to demand for background I/O. It can be enabled by passing `true` to the `auto_tuned` parameter in `NewGenericRateLimiter()`. The value passed as `rate_bytes_per_sec` will still be respected as an upper-bound.
