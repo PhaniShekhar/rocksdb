@@ -302,10 +302,12 @@ Status DBImpl::Directories::SetDirectories(
   cf_data_dirs_.clear();
   for (auto& column_family : column_families) {
     if (!column_family.options.cf_paths.empty()) {
-      s = AddCFDirectories(env, column_family.name,
-                           column_family.options.cf_paths);
-      if (!s.ok()) {
-        return s;
+      if (column_family.options.cf_paths != data_paths) {
+        s = AddCFDirectories(env, column_family.name,
+                             column_family.options.cf_paths);
+        if (!s.ok()) {
+          return s;
+        }
       }
     }
   }

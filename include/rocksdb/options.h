@@ -315,6 +315,10 @@ struct DbPath {
 
   DbPath() : target_size(0) {}
   DbPath(const std::string& p, uint64_t t) : path(p), target_size(t) {}
+
+  bool operator==(const DbPath& other) const {
+    return (path == other.path) && (target_size == other.target_size);
+  }
 };
 
 
