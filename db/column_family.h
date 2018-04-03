@@ -381,7 +381,7 @@ class ColumnFamilyData {
 
   Status AddDirectories();
 
-  Directory* GetDataDir(size_t path_id);
+  Directory* GetDataDir(size_t path_id) const;
 
  private:
   friend class ColumnFamilySet;

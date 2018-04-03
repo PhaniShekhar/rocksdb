@@ -514,7 +514,7 @@ void DBImpl::ScheduleBgLogWriterClose(JobContext* job_context) {
   }
 }
 
-Directory* DBImpl::GetDataDir(ColumnFamilyData* cfd, size_t path_id) {
+Directory* DBImpl::GetDataDir(ColumnFamilyData* cfd, size_t path_id) const {
   assert(cfd);
   Directory* ret_dir = cfd->GetDataDir(path_id);
   if (ret_dir == nullptr) {
@@ -522,7 +522,7 @@ Directory* DBImpl::GetDataDir(ColumnFamilyData* cfd, size_t path_id) {
   }
 }
 
-Directory* DBImpl::Directories::GetDataDir(size_t path_id) {
+Directory* DBImpl::Directories::GetDataDir(size_t path_id) const {
   assert(path_id < data_dirs_.size());
   Directory* ret_dir = data_dirs_[path_id].get();
   if (ret_dir == nullptr) {

@@ -963,7 +963,7 @@ class DBImpl : public DB {
 
   uint64_t GetMaxTotalWalSize() const;
 
-  Directory* GetDataDir(ColumnFamilyData* cfd, size_t path_id);
+  Directory* GetDataDir(ColumnFamilyData* cfd, size_t path_id) const;
 
   Status CloseHelper();
 
@@ -1102,7 +1102,7 @@ class DBImpl : public DB {
                           const std::string& wal_dir,
                           const std::vector<DbPath>& data_paths);
 
-    Directory* GetDataDir(size_t path_id);
+    Directory* GetDataDir(size_t path_id) const;
 
     Directory* GetWalDir() {
       if (wal_dir_) {

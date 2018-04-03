@@ -1187,11 +1187,11 @@ Status ColumnFamilyData::AddDirectories() {
     assert(path_directory != nullptr);
     data_dirs_.emplace_back(path_directory.release());
   }
-  assert(data_dirs_.size() == data_paths.size());
+  assert(data_dirs_.size() == ioptions_.cf_paths.size());
   return Status::OK();
 }
 
-Directory* ColumnFamilyData::GetDataDir(size_t path_id) {
+Directory* ColumnFamilyData::GetDataDir(size_t path_id) const {
   if (data_dirs_.empty()) {
     return nullptr;
   }
