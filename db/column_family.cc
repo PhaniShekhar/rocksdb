@@ -1177,6 +1177,7 @@ Env::WriteLifeTimeHint ColumnFamilyData::CalculateSSTWriteHint(int level) {
 }
 
 Status ColumnFamilyData::AddDirectories() {
+  Status s;
   assert(data_dirs_.empty());
   for (auto& p : ioptions_.cf_paths) {
     std::unique_ptr<Directory> path_directory;
@@ -1188,7 +1189,7 @@ Status ColumnFamilyData::AddDirectories() {
     data_dirs_.emplace_back(path_directory.release());
   }
   assert(data_dirs_.size() == ioptions_.cf_paths.size());
-  return Status::OK();
+  return s;
 }
 
 Directory* ColumnFamilyData::GetDataDir(size_t path_id) const {
