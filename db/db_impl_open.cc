@@ -251,7 +251,7 @@ Status DBImpl::NewDB() {
 
 Status DBImpl::CreateAndNewDirectory(
     Env* env, const std::string& dirname,
-    std::unique_ptr<Directory>* directory) const {
+    std::unique_ptr<Directory>* directory) {
   // We call CreateDirIfMissing() as the directory may already exist (if we
   // are reopening a DB), when this happens we don't want creating the
   // directory to cause an error. However, we need to check if creating the

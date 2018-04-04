@@ -518,8 +518,9 @@ Directory* DBImpl::GetDataDir(ColumnFamilyData* cfd, size_t path_id) const {
   assert(cfd);
   Directory* ret_dir = cfd->GetDataDir(path_id);
   if (ret_dir == nullptr) {
-    directories_->GetDataDir(path_id);
+    return directories_.GetDataDir(path_id);
   }
+  return ret_dir;
 }
 
 Directory* DBImpl::Directories::GetDataDir(size_t path_id) const {
